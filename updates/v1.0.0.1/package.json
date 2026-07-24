@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "version": "1.0.0.1",
+  "files": [
+    {
+      "path": "app/assets/index-B7SzcTRI.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/assets/index-B7SzcTRI.js",
+      "sha256": "9ba58a750da02078905271271d825378ff2dca0ce679b7532a29dd20aa4f2b3d",
+      "size": 290514
+    },
+    {
+      "path": "app/assets/index-BWXEABTF.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/assets/index-BWXEABTF.js",
+      "sha256": "205789351386de92b47a9f4e1a55c290e79e08c9b9b6a2059bccf93be0f69fdc",
+      "size": 4141
+    },
+    {
+      "path": "app/assets/index-J-PGHkZ6.css",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/assets/index-J-PGHkZ6.css",
+      "sha256": "bad38485a25c2351272b98c92bd98872d0698a4e408b2d88a10085943407d2e0",
+      "size": 57446
+    },
+    {
+      "path": "app/assets/visualizerDsp.worker-B_7RbjR4.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/assets/visualizerDsp.worker-B_7RbjR4.js",
+      "sha256": "2a3aab8825112717b5652bd0f458386a55e01bed5cb0b11e4a946b2c87e15fe6",
+      "size": 755
+    },
+    {
+      "path": "app/assets/worker-BAOIWoxA.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/assets/worker-BAOIWoxA.js",
+      "sha256": "242931933b757920171cbdfd4ad7a082cfaa6537a0110e707d80d1555eaa0890",
+      "size": 2526
+    },
+    {
+      "path": "app/ffmpeg/ffmpeg-core.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/ffmpeg/ffmpeg-core.js",
+      "sha256": "67a48f11645f85439f3fde4f2119042c16b374b910206b7a7a24f342e28dcae3",
+      "size": 111804
+    },
+    {
+      "path": "app/ffmpeg/ffmpeg-core.wasm",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/ffmpeg/ffmpeg-core.wasm",
+      "sha256": "9f57947a5bd530d8f00c5b3f2cb2a3492faa7e5d823315342d6a8656d0a6b7b7",
+      "size": 32232419
+    },
+    {
+      "path": "app/index.html",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/app/index.html",
+      "sha256": "523ff33cd77641ad0c2905b3ebab13c189385097315e595df9846b8731c8fc73",
+      "size": 575
+    },
+    {
+      "path": "editor/assets/index-BkVA2UjB.css",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/editor/assets/index-BkVA2UjB.css",
+      "sha256": "11851b8c347b3788a8e1275f6a8d01acbcfee878ce5cef208d0537fc5d2b97c2",
+      "size": 20064
+    },
+    {
+      "path": "editor/assets/index-uwmatF0M.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/editor/assets/index-uwmatF0M.js",
+      "sha256": "0605bb73317722e4c11963625c4a64ed763529378138872c26962952b200cda7",
+      "size": 114043
+    },
+    {
+      "path": "editor/index.html",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/editor/index.html",
+      "sha256": "d92da6c5d9916e9b4abb5b30368d3ccf9467ad9f26fc7bdefa01c1418dd85e2e",
+      "size": 465
+    },
+    {
+      "path": "packager/assets/index-Dzx_kLFg.js",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/packager/assets/index-Dzx_kLFg.js",
+      "sha256": "5b8014c95d16d01db7affaa794c63194302c5d5156040efda6326c31a13f74d3",
+      "size": 73768
+    },
+    {
+      "path": "packager/assets/index-IgKl6UL3.css",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/packager/assets/index-IgKl6UL3.css",
+      "sha256": "b861714b78cb8ffca9ff12efeccd42e6980d5f3860efe38d6d6d010c57fe75eb",
+      "size": 8893
+    },
+    {
+      "path": "packager/index.html",
+      "url": "https://raw.githubusercontent.com/qifad/Nightwave/main/updates/v1.0.0.1/packager/index.html",
+      "sha256": "99c340b1d0c44c7ca1f1d039e3ad6766cf77a692b839ea96a6e938cfd04e06bb",
+      "size": 458
+    }
+  ]
+}
