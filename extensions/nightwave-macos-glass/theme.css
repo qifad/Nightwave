@@ -1,0 +1,213 @@
+:root {
+  --mac-bg: #f5f5f7;
+  --mac-surface: rgba(255, 255, 255, .72);
+  --mac-surface-strong: rgba(255, 255, 255, .92);
+  --mac-surface-solid: #ffffff;
+  --mac-text: #1d1d1f;
+  --mac-secondary: #515154;
+  --mac-tertiary: #6e6e73;
+  --mac-line: rgba(60, 60, 67, .18);
+  --mac-accent: #007aff;
+  --mac-accent-2: #34c759;
+  --mac-control: rgba(118, 118, 128, .16);
+  color-scheme: light;
+}
+
+:root[data-nightwave-macos-theme="dark"] {
+  --mac-bg: #1c1c1e;
+  --mac-surface: rgba(44, 44, 46, .78);
+  --mac-surface-strong: rgba(58, 58, 60, .9);
+  --mac-surface-solid: #2c2c2e;
+  --mac-text: #f5f5f7;
+  --mac-secondary: #d1d1d6;
+  --mac-tertiary: #a1a1a6;
+  --mac-line: rgba(255, 255, 255, .16);
+  --mac-accent: #0a84ff;
+  --mac-accent-2: #30d158;
+  --mac-control: rgba(118, 118, 128, .24);
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--mac-bg);
+  color: var(--mac-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", "Microsoft YaHei UI", sans-serif;
+}
+
+body { transition: background-color 180ms ease, color 180ms ease; }
+
+.app-shell {
+  --bg: var(--mac-bg);
+  --panel: var(--mac-surface);
+  --panel-strong: var(--mac-surface-strong);
+  --line: var(--mac-line);
+  --text: var(--mac-text);
+  --soft: var(--mac-secondary);
+  --muted: var(--mac-tertiary);
+  --accent: var(--mac-accent);
+  --accent-2: var(--mac-accent-2);
+  --global-lyric-accent: var(--mac-accent) !important;
+  --global-lyric-accent-2: var(--mac-accent-2) !important;
+  color: var(--mac-text);
+  background: var(--mac-bg);
+}
+
+.sidebar,
+.player-bar,
+.queue-drawer,
+.lyrics-settings-panel,
+.app-settings-page,
+.extensions-page {
+  color: var(--mac-text);
+  background: var(--mac-surface);
+  border-color: var(--mac-line);
+  backdrop-filter: blur(30px) saturate(160%);
+}
+
+.sidebar { box-shadow: 10px 0 30px rgba(0, 0, 0, .06); }
+.brand-mark { color: var(--mac-accent); background: var(--mac-surface-strong); border-color: color-mix(in srgb, var(--mac-accent) 30%, var(--mac-line)); border-radius: 8px; }
+.brand-mark span { background: currentColor; }
+.topbar { color: var(--mac-text); }
+.topbar h1, .collection-heading h2, .section-heading, .now-copy h2 { color: var(--mac-text); }
+.topbar-actions { color: var(--mac-secondary); }
+.search-field { color: var(--mac-secondary); background: var(--mac-surface); border-color: var(--mac-line); border-radius: 9px; }
+.search-field input { color: var(--mac-text); }.search-field input::placeholder { color: var(--mac-tertiary); }
+.import-button, .primary-action { color: #fff; background: var(--mac-accent); border-color: var(--mac-accent); border-radius: 9px; box-shadow: 0 8px 20px color-mix(in srgb, var(--mac-accent) 22%, transparent); }
+.import-button:hover, .primary-action:hover { color: #fff; background: color-mix(in srgb, var(--mac-accent) 86%, #fff); }
+.folder-button { color: var(--mac-secondary); background: var(--mac-surface); border-color: var(--mac-line); border-radius: 10px; }
+.folder-button strong { color: var(--mac-text); }.folder-button small { color: var(--mac-tertiary); }
+.nav-list button, .sidebar-tools button { color: var(--mac-tertiary); border-radius: 8px; }
+.nav-list button:hover, .nav-list button.is-active, .sidebar-tools button:hover, .sidebar-tools button.is-active { color: var(--mac-accent); background: color-mix(in srgb, var(--mac-accent) 10%, transparent); border-left-color: var(--mac-accent); }
+.nav-caption, .eyebrow { color: var(--mac-tertiary); }
+
+.now-stage,
+.lyrics-column,
+.settings-page-card,
+.extension-card,
+.track-action-menu,
+.lyrics-search-dialog,
+.export-dialog {
+  color: var(--mac-text);
+  background: var(--mac-surface-strong);
+  border-color: var(--mac-line);
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .1);
+}
+
+.ambient-art { opacity: .08; filter: blur(80px) saturate(.7); }
+.cover-wrap, .track-identity img, .player-track > img { border-radius: 12px; }
+.now-copy > span, .immersive-art > div > span, .extension-type { color: var(--mac-accent); }
+.now-copy p, .track-album, .track-duration { color: var(--mac-tertiary); }
+.lyrics-empty, .lyrics-empty span { color: var(--mac-tertiary); }.lyrics-empty strong { color: var(--mac-secondary); }
+.lyric-line { color: color-mix(in srgb, var(--mac-text) 30%, transparent); }.lyric-line:hover { color: color-mix(in srgb, var(--mac-text) 68%, transparent); }.lyric-line[data-active="true"] { color: var(--mac-text); text-shadow: none; }.lyric-line[data-active="true"]::before { color: var(--mac-accent); }
+.track-list-head { color: var(--mac-tertiary); border-color: var(--mac-line); }.track-row { color: var(--mac-text); border-color: color-mix(in srgb, var(--mac-line) 70%, transparent); }.track-row:hover, .track-row.is-current { background: color-mix(in srgb, var(--mac-accent) 7%, transparent); }.track-identity strong { color: var(--mac-text); }.track-identity small { color: var(--mac-tertiary); }
+
+.player-bar { color: var(--mac-text); background: color-mix(in srgb, var(--mac-surface-strong) 92%, transparent); border-color: var(--mac-line); box-shadow: 0 -12px 35px rgba(0, 0, 0, .08); }
+.player-track strong { color: var(--mac-text); }.player-track span { color: var(--mac-tertiary); }.player-tools .icon-button, .transport-buttons .icon-button { color: var(--mac-tertiary); }.player-tools .icon-button:hover, .transport-buttons .icon-button:hover, .icon-button.is-active { color: var(--mac-accent); background: color-mix(in srgb, var(--mac-accent) 9%, transparent); }
+.play-button { color: #fff; background: var(--mac-accent); box-shadow: 0 8px 22px color-mix(in srgb, var(--mac-accent) 30%, transparent); }.play-button:hover { color: #fff; background: color-mix(in srgb, var(--mac-accent) 84%, #fff); }
+input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--mac-accent) var(--range-progress), var(--mac-control) var(--range-progress)); }
+input[type="range"]::-webkit-slider-thumb { background: var(--mac-accent); }
+
+.queue-drawer { box-shadow: -20px 0 60px rgba(0, 0, 0, .16); }.queue-head h2 { color: var(--mac-text); }.queue-list > button { color: var(--mac-text); border-color: var(--mac-line); }.queue-list > button:hover, .queue-list > button.is-current { background: color-mix(in srgb, var(--mac-accent) 8%, transparent); }.queue-copy small, .queue-index { color: var(--mac-tertiary); }
+.sidebar-tools { z-index: 22; }
+.app-settings-page, .extensions-page { color: var(--mac-text); }.app-page-header h1, .app-page-header p, .extension-card h2 { color: var(--mac-text); }.app-page-header p, .settings-page-card p, .extension-card-body > p { color: var(--mac-tertiary); }
+.settings-page-card, .extension-card { background: var(--mac-surface-strong); }.settings-page-hero { color: var(--mac-text); background: color-mix(in srgb, var(--mac-accent) 9%, var(--mac-surface-strong)); }.settings-page-toggle { color: var(--mac-secondary); border-color: var(--mac-line); }.settings-page-toggle input { background: var(--mac-control); }.settings-page-toggle input::before { background: var(--mac-tertiary); }.settings-page-toggle input:checked { background: var(--mac-accent); }.settings-page-toggle input:checked::before { background: #fff; }
+.settings-select, .field-control input, .field-control textarea { color: var(--mac-text); background: var(--mac-surface); border-color: var(--mac-line); }.settings-select option { color: var(--mac-text); background: var(--mac-surface-solid); }
+.page-action { color: var(--mac-text); background: var(--mac-control); border-color: var(--mac-line); border-radius: 8px; }.page-action:hover { color: var(--mac-accent); background: color-mix(in srgb, var(--mac-accent) 10%, transparent); border-color: var(--mac-accent); }.extension-card { border-color: var(--mac-line); }.extension-card:hover, .extension-card.is-active { border-color: color-mix(in srgb, var(--mac-accent) 58%, var(--mac-line)); }.extension-art { color: var(--mac-accent); background: color-mix(in srgb, var(--mac-accent) 12%, var(--mac-surface-solid)); }.extension-version, .extension-card footer small { color: var(--mac-tertiary); }.extension-active-label { color: var(--mac-accent-2); }.extension-import { color: #fff; background: var(--mac-accent); }.extension-import:hover { background: color-mix(in srgb, var(--mac-accent) 84%, #fff); }.extension-hint { color: var(--mac-tertiary); }
+
+.track-action-menu, .lyrics-search-dialog, .export-dialog, .lyrics-settings-panel { color: var(--mac-text); background: var(--mac-surface-strong); border-color: var(--mac-line); box-shadow: 0 24px 70px rgba(0, 0, 0, .18); }.track-action-menu header strong, .lyrics-search-dialog h2, .export-dialog h2 { color: var(--mac-text); }.track-action-menu header small, .lyrics-search-dialog p, .export-dialog p { color: var(--mac-tertiary); }.track-action-menu button, .lyrics-search-dialog button, .export-dialog button { color: var(--mac-secondary); }.track-action-menu button:hover { color: var(--mac-accent); background: color-mix(in srgb, var(--mac-accent) 9%, transparent); }
+.lyrics-settings-panel header, .lyrics-settings-panel h2 { color: var(--mac-text); }.lyrics-settings-panel .settings-range label, .lyrics-settings-panel .settings-section label { color: var(--mac-secondary); }
+.toast { color: #fff; background: rgba(29, 29, 31, .88); border-color: rgba(255, 255, 255, .2); backdrop-filter: blur(20px); }.drop-overlay { color: var(--mac-text); background: color-mix(in srgb, var(--mac-surface-strong) 86%, transparent); border-color: var(--mac-accent); }
+
+.macos-theme-toggle { min-height: 42px !important; display: flex !important; grid-template-columns: none !important; align-items: center; gap: 10px !important; color: var(--mac-secondary) !important; background: transparent !important; border-left-color: transparent !important; border-radius: 8px !important; }.macos-theme-toggle:hover, .macos-theme-toggle[aria-pressed="true"] { color: var(--mac-accent) !important; background: color-mix(in srgb, var(--mac-accent) 10%, transparent) !important; border-left-color: var(--mac-accent) !important; }.macos-theme-toggle-icon { width: 20px; height: 20px; display: grid; place-items: center; color: currentColor; font-size: 15px; }.macos-theme-toggle-label { font-size: 12px; }
+.macos-theme-reveal { position: fixed; z-index: 200; inset: 0; pointer-events: none; background: var(--theme-reveal-color); }
+
+@media (max-width: 700px) { .macos-theme-toggle-label { display: none; }.macos-theme-toggle { justify-content: center; gap: 0 !important; } }
+
+.lyrics-query input,
+.settings-select select,
+.visualizer-mode-grid > button,
+.visualizer-performance-grid,
+.preset-grid > button,
+.segmented-control,
+.destination-options {
+  color: var(--mac-text);
+  background: var(--mac-surface);
+  border-color: var(--mac-line);
+}
+
+.visualizer-mode-grid > button:hover,
+.visualizer-mode-grid > button.is-active,
+.preset-grid > button.is-active,
+.segmented-control button.is-active,
+.destination-options button.is-active {
+  color: var(--mac-text);
+  background: color-mix(in srgb, var(--mac-accent) 10%, var(--mac-surface));
+  border-color: var(--mac-accent);
+}
+
+.preset-preview { background: color-mix(in srgb, var(--mac-text) 8%, var(--mac-bg)); }.preset-preview i { background: color-mix(in srgb, var(--mac-text) 20%, transparent); }
+.segmented-control button, .destination-options button { color: var(--mac-tertiary); }.segmented-control button:hover, .destination-options button:hover { color: var(--mac-text); }
+.lyrics-query > button { color: #fff; background: var(--mac-accent); }.lyric-result { color: var(--mac-text); border-color: var(--mac-line); }.lyric-result:hover { background: color-mix(in srgb, var(--mac-accent) 7%, transparent); }.result-rank, .result-kind, .result-duration { color: var(--mac-tertiary); }
+.settings-section { border-color: var(--mac-line); }.settings-section h3, .settings-range > span, .export-quality > span { color: var(--mac-secondary); }.visualizer-mode-grid small { color: var(--mac-tertiary); }
+.action-menu-group { border-color: var(--mac-line); }.action-menu-group > button { color: var(--mac-secondary); }.action-menu-group > button:hover { color: var(--mac-text); background: color-mix(in srgb, var(--mac-accent) 8%, transparent); }.action-menu-info { color: var(--mac-tertiary); }
+.dialog-header, .lyrics-query { border-color: var(--mac-line); }.dialog-header h2 { color: var(--mac-text); }.dialog-close { color: var(--mac-tertiary); }.dialog-state { color: var(--mac-tertiary); }
+.modal-backdrop, .settings-backdrop { background: color-mix(in srgb, var(--mac-bg) 72%, transparent); }
+.lyrics-settings-panel .settings-select select, .lyrics-settings-panel input[type="number"], .lyrics-settings-panel input[type="text"] { color: var(--mac-text); background: var(--mac-surface); border-color: var(--mac-line); }
+
+.lyrics-column,
+.lyrics-view-shell,
+.lyrics-scroll,
+.lyrics-empty,
+.plain-lyric-line {
+  color: var(--mac-text);
+  background: transparent;
+}
+
+.lyrics-view-shell,
+.lyrics-scroll {
+  --lyric-accent: var(--mac-accent) !important;
+  --lyric-accent-2: var(--mac-accent-2) !important;
+  --lyric-inactive-opacity: .42 !important;
+  --lyric-blur: 0px !important;
+}
+
+.lyrics-scroll .lyric-line {
+  color: color-mix(in srgb, var(--mac-text) 42%, transparent) !important;
+  background: transparent;
+}
+
+.lyrics-scroll .lyric-line:hover {
+  color: color-mix(in srgb, var(--mac-text) 76%, transparent) !important;
+}
+
+.lyrics-scroll .lyric-line[data-active="true"] {
+  color: var(--mac-text) !important;
+  text-shadow: 0 0 22px color-mix(in srgb, var(--mac-accent) 30%, transparent);
+}
+
+.lyrics-scroll .lyric-line span,
+.lyrics-scroll .lyric-line small,
+.plain-lyric-line span,
+.plain-lyric-line small {
+  color: inherit;
+}
+
+.lyrics-scroll .lyric-line small,
+.plain-lyric-line small {
+  color: var(--mac-tertiary);
+}
+
+.lyrics-translation-cta,
+.lyrics-empty button {
+  color: var(--mac-accent);
+  background: var(--mac-surface);
+  border-color: color-mix(in srgb, var(--mac-accent) 50%, var(--mac-line));
+}
+
+.lyrics-empty button:hover,
+.lyrics-translation-cta:hover {
+  color: var(--mac-text);
+  background: color-mix(in srgb, var(--mac-accent) 10%, var(--mac-surface));
+}

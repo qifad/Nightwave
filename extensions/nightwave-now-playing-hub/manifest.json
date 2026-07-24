@@ -1,0 +1,9 @@
+{
+  "id": "nightwave.now-playing-hub",
+  "name": "Now Playing Hub",
+  "version": "1.0.0",
+  "type": "plugin",
+  "description": "A lightweight macOS-style now playing capsule with quick playback, lyrics and queue controls.",
+  "entry": "plugin.js",
+  "author": "Nightwave"
+}

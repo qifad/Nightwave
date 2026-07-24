@@ -1,0 +1,72 @@
+{
+  "name": "nightwave-local-player",
+  "private": true,
+  "version": "1.0.0",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:editor": "npm --prefix EDITOR run dev -- --host 127.0.0.1 --port 5174",
+    "dev:packager": "npm --prefix PACKAGER run dev -- --host 127.0.0.1 --port 5175",
+    "dev:electron": "concurrently -k \"npm run dev -- --host 127.0.0.1 --port 4173\" \"npm run dev:editor\" \"npm run dev:packager\" \"wait-on http://127.0.0.1:4173 http://127.0.0.1:5174 http://127.0.0.1:5175 && cross-env ELECTRON_START_URL=http://127.0.0.1:4173 electron .\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:editor": "npm --prefix EDITOR run build",
+    "build:packager": "npm --prefix PACKAGER run build",
+    "pack:win": "vite build --emptyOutDir=false && npm run build:editor && npm run build:packager && electron-builder --win nsis --config.directories.output=release-lyrics && node electron/copy-extensions.cjs release-lyrics"
+  },
+  "dependencies": {
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@lucide/vue": "^1.26.0",
+    "crypto-js": "^4.2.0",
+    "fflate": "^0.8.2",
+    "vite-plugin-static-copy": "^2.3.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^35.0.2",
+    "electron-builder": "^26.0.12",
+    "vite": "^6.0.5",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "com.nightwave.localplayer",
+    "productName": "Nightwave",
+    "asar": true,
+    "files": [
+      "dist/**/*",
+      "!dist/packaged/**/*",
+      "!dist/win-unpacked/**/*",
+      "electron/**/*",
+      "EDITOR/dist/**/*",
+      "PACKAGER/dist/**/*",
+      "package.json"
+    ],
+    "extraFiles": [
+      {
+        "from": "extensions",
+        "to": "extensions"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "artifactName": "Nightwave-${version}-win-x64.exe"
+    }
+  }
+}

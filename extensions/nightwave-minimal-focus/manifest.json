@@ -1,0 +1,15 @@
+{
+  "id": "nightwave.minimal-focus",
+  "name": "Minimal Focus",
+  "version": "1.0.0",
+  "type": "theme",
+  "description": "A minimal focus theme with a small companion plugin for compact playback controls.",
+  "stylesheet": "theme.css",
+  "entry": "theme.js",
+  "author": "Nightwave",
+  "accent": "#d8ff5f",
+  "accent2": "#9aa3a0",
+  "uiRules": [
+    { "id": "minimal-equalizer", "name": "EQ panel", "selector": ".equalizer-panel, .eq-graph-wrap, .eq-band-row", "background": "#151817", "textColor": "#eef2e8", "borderColor": "#354038", "radius": 3, "blur": 0, "opacity": 1, "shadow": 0, "enabled": true }
+  ]
+}

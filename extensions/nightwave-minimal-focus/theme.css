@@ -1,0 +1,29 @@
+:root {
+  color-scheme: dark;
+  --minimal-bg: #0b0d0c;
+  --minimal-surface: #151817;
+  --minimal-line: #2b342e;
+  --minimal-text: #eef2e8;
+  --minimal-muted: #8f9991;
+  --minimal-accent: #d8ff5f;
+}
+
+.app-shell { --accent: var(--minimal-accent); --accent-2: #9aa3a0; --bg: var(--minimal-bg); --panel: var(--minimal-surface); --text: var(--minimal-text); --muted: var(--minimal-muted); --line: var(--minimal-line); }
+.app-shell, .sidebar, .player-bar, .now-stage, .lyrics-column, .settings-page-card, .equalizer-panel { border-radius: 3px; box-shadow: none; }
+.sidebar, .player-bar, .topbar, .equalizer-panel, .settings-page-card { background: var(--minimal-surface); backdrop-filter: none; }
+.sidebar { border-right-color: var(--minimal-line); }
+.topbar { border-bottom-color: var(--minimal-line); }
+.track-row, .queue-list > button { border-radius: 2px; }
+.track-row:hover, .queue-list > button:hover, .nav-list button:hover { background: rgba(216, 255, 95, .07); }
+.nav-list button.is-active, .sidebar-tools button.is-active { color: var(--minimal-accent); background: rgba(216, 255, 95, .1); }
+.play-button { color: #0b0d0c; background: var(--minimal-accent); box-shadow: 0 0 0 1px rgba(216, 255, 95, .3); }
+.audio-visualizer { opacity: .42; filter: grayscale(1); }
+.eq-graph-wrap { background: #0d100e; }
+.eq-curve { stroke: var(--minimal-accent); filter: none; }
+.eq-node circle { fill: var(--minimal-accent); filter: none; }
+.eq-band-row.selected { background: rgba(216, 255, 95, .08); border-color: rgba(216, 255, 95, .52); }
+.minimal-focus-button { width: 38px; min-height: 34px; padding: 0; color: var(--minimal-accent); background: transparent; border: 1px solid var(--minimal-line); border-radius: 3px; font: 11px Consolas, monospace; }
+.minimal-focus-button[aria-pressed="true"] { color: #0b0d0c; background: var(--minimal-accent); }
+.minimal-focus-mode .audio-visualizer { display: none; }
+.minimal-focus-mode .now-stage { grid-template-columns: 1fr; }
+.minimal-focus-mode .lyrics-column { min-height: 50vh; }

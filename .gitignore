@@ -1,0 +1,10 @@
+node_modules/
+dist/
+EDITOR/dist/
+PACKAGER/dist/
+release*/
+*.log
+.vscode/
+1908
+1948
+nightwave-*.log

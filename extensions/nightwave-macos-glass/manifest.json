@@ -1,0 +1,12 @@
+{
+  "id": "nightwave.macos-glass",
+  "name": "macOS Native Glass",
+  "version": "1.0.0",
+  "type": "theme",
+  "description": "A native macOS-inspired interface with vibrancy, system blue accents and calm window surfaces.",
+  "stylesheet": "theme.css",
+  "entry": "theme.js",
+  "author": "Nightwave",
+  "accent": "#007aff",
+  "accent2": "#34c759"
+}
