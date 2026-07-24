@@ -2,6 +2,7 @@ const { app, BrowserWindow, dialog, ipcMain, net, protocol, shell } = require('e
 const { spawn } = require('node:child_process');
 const { createHash, randomUUID } = require('node:crypto');
 const { Worker } = require('node:worker_threads');
+const { unzipSync } = require('fflate');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
@@ -21,8 +22,8 @@ function extensionDirectory() {
 
 const musicFileExtensions = new Set(['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg', 'opus', 'webm', 'ncm', 'lrc', 'jpg', 'jpeg', 'png', 'webp']);
 const mediaRoots = new Map();
-const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/qifad/Nightwave/main/updates/manifest.json';
-const UPDATE_RAW_PREFIX = 'https://raw.githubusercontent.com/qifad/Nightwave/main/updates/';
+const RELEASE_API_URL = 'https://api.github.com/repos/qifad/Nightwave/releases/latest';
+const RELEASE_ASSET_PREFIX = 'https://github.com/qifad/Nightwave/releases/download/';
 let activeDataPackage = null;
 let dataUpdateJob = null;
 
@@ -61,8 +62,8 @@ function safeUpdateRelativePath(value) {
   return normalized;
 }
 
-function isTrustedUpdateUrl(value) {
-  return typeof value === 'string' && value.startsWith(UPDATE_RAW_PREFIX);
+function isTrustedReleaseAsset(value) {
+  return typeof value === 'string' && value.startsWith(RELEASE_ASSET_PREFIX);
 }
 
 function activeContentDirectory(hostname) {
@@ -78,14 +79,14 @@ async function loadActiveDataPackage() {
     const directory = folder ? path.resolve(updateDataRoot(), folder) : '';
     if (!directory.startsWith(`${updateDataRoot()}${path.sep}`)) return;
     await Promise.all(['app/index.html', 'editor/index.html', 'packager/index.html'].map((file) => fs.access(path.join(directory, file))));
-    activeDataPackage = { version: String(state.version), directory };
+    activeDataPackage = { version: String(state.version), directory, size: Number(state.size) || 0 };
   } catch {
     activeDataPackage = null;
   }
 }
 
 async function fetchUpdateBytes(url) {
-  const response = await net.fetch(url, { headers: { 'User-Agent': 'Nightwave/1.0 update client', 'Cache-Control': 'no-cache' } });
+  const response = await net.fetch(url, { headers: { 'User-Agent': 'Nightwave/1.0 update client', Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache' } });
   if (!response.ok) throw new Error(`更新服务器返回 ${response.status}`);
   return Buffer.from(await response.arrayBuffer());
 }
@@ -98,51 +99,81 @@ function updateStatus(status, extra = {}) {
   return { status, currentVersion: activeDataPackage?.version || app.getVersion(), ...extra };
 }
 
+function releaseUpdateInfo(release) {
+  const version = String(release.tag_name || '').replace(/^v/i, '');
+  const asset = (release.assets || []).find((item) => item.name === `Nightwave-data-v${version}.zip` && isTrustedReleaseAsset(item.browser_download_url));
+  if (!/^\d+\.\d+\.\d+(?:\.\d+)?$/.test(version) || !asset) throw new Error('Release 缺少可用数据包');
+  return {
+    version,
+    title: String(release.name || `Nightwave v${version}`),
+    notes: String(release.body || ''),
+    publishedAt: String(release.published_at || ''),
+    assetName: asset.name,
+    assetUrl: asset.browser_download_url,
+    size: Number(asset.size) || 0,
+    sizeDelta: (Number(asset.size) || 0) - (activeDataPackage?.size || 0),
+  };
+}
+
+async function fetchLatestRelease() {
+  return releaseUpdateInfo(await fetchUpdateJson(RELEASE_API_URL));
+}
+
 async function checkDataUpdate() {
   if (dataUpdateJob) return dataUpdateJob;
   dataUpdateJob = (async () => {
     try {
-      const manifest = await fetchUpdateJson(UPDATE_MANIFEST_URL);
-      const version = String(manifest.version || '');
-      if (!/^\d+\.\d+\.\d+(?:\.\d+)?$/.test(version) || !isTrustedUpdateUrl(manifest.packageUrl) || !/^[a-f\d]{64}$/i.test(manifest.packageSha256 || '')) {
-        throw new Error('更新清单格式无效');
-      }
-      if (compareVersions(version, activeDataPackage?.version || app.getVersion()) <= 0) return updateStatus('up-to-date', { remoteVersion: version });
-      const descriptorBytes = await fetchUpdateBytes(manifest.packageUrl);
-      if (createHash('sha256').update(descriptorBytes).digest('hex') !== manifest.packageSha256.toLowerCase()) throw new Error('更新包清单校验失败');
-      const descriptor = JSON.parse(descriptorBytes.toString('utf8'));
-      if (descriptor.version !== version || !Array.isArray(descriptor.files) || !descriptor.files.length || descriptor.files.length > 5000) throw new Error('更新包内容无效');
-      const root = updateDataRoot();
-      const stageDirectory = path.join(root, `.staging-${version}-${Date.now()}`);
-      const targetDirectory = path.join(root, `v${version}`);
-      try {
-        for (const file of descriptor.files) {
-          const relativePath = safeUpdateRelativePath(file.path);
-          if (!relativePath || !isTrustedUpdateUrl(file.url) || !/^[a-f\d]{64}$/i.test(file.sha256 || '')) throw new Error('更新文件清单无效');
-          const bytes = await fetchUpdateBytes(file.url);
-          if (bytes.length !== Number(file.size) || createHash('sha256').update(bytes).digest('hex') !== file.sha256.toLowerCase()) throw new Error(`更新文件校验失败: ${relativePath}`);
-          const output = path.resolve(stageDirectory, relativePath);
-          if (!output.startsWith(`${stageDirectory}${path.sep}`)) throw new Error('更新文件路径无效');
-          await fs.mkdir(path.dirname(output), { recursive: true });
-          await fs.writeFile(output, bytes);
-        }
-        await Promise.all(['app/index.html', 'editor/index.html', 'packager/index.html'].map((file) => fs.access(path.join(stageDirectory, file))));
-        await fs.mkdir(root, { recursive: true });
-        await fs.rm(targetDirectory, { recursive: true, force: true });
-        await fs.rename(stageDirectory, targetDirectory);
-        const state = { version, folder: `v${version}`, installedAt: new Date().toISOString() };
-        const temporary = `${updateStatePath()}.tmp`;
-        await fs.writeFile(temporary, JSON.stringify(state, null, 2), 'utf8');
-        await fs.rm(updateStatePath(), { force: true });
-        await fs.rename(temporary, updateStatePath());
-        activeDataPackage = { version, directory: targetDirectory };
-        return updateStatus('updated', { remoteVersion: version });
-      } catch (error) {
-        await fs.rm(stageDirectory, { recursive: true, force: true }).catch(() => {});
-        throw error;
-      }
+      const release = await fetchLatestRelease();
+      if (compareVersions(release.version, activeDataPackage?.version || app.getVersion()) <= 0) return updateStatus('up-to-date', { remoteVersion: release.version, release });
+      return updateStatus('available', { remoteVersion: release.version, release });
     } catch (error) {
       return updateStatus('unavailable', { error: error.message || '无法检查更新' });
+    } finally {
+      dataUpdateJob = null;
+    }
+  })();
+  return dataUpdateJob;
+}
+
+async function installReleaseDataUpdate(version) {
+  if (dataUpdateJob) return dataUpdateJob;
+  dataUpdateJob = (async () => {
+    let stageDirectory = '';
+    try {
+      const release = await fetchLatestRelease();
+      if (release.version !== version) throw new Error('Release 版本已变化，请重新检查');
+      const archive = unzipSync(new Uint8Array(await fetchUpdateBytes(release.assetUrl)));
+      const descriptorBytes = archive['package.json'];
+      if (!descriptorBytes) throw new Error('更新包缺少清单');
+      const descriptor = JSON.parse(Buffer.from(descriptorBytes).toString('utf8'));
+      if (descriptor.version !== release.version || !Array.isArray(descriptor.files) || !descriptor.files.length || descriptor.files.length > 5000) throw new Error('更新包内容无效');
+      const root = updateDataRoot();
+      stageDirectory = path.join(root, `.staging-${release.version}-${Date.now()}`);
+      const targetDirectory = path.join(root, `v${release.version}`);
+      for (const file of descriptor.files) {
+        const relativePath = safeUpdateRelativePath(file.path);
+        const bytes = archive[relativePath];
+        if (!relativePath || !bytes || !/^[a-f\d]{64}$/i.test(file.sha256 || '') || bytes.length !== Number(file.size) || createHash('sha256').update(bytes).digest('hex') !== file.sha256.toLowerCase()) throw new Error(`更新文件校验失败: ${relativePath || 'unknown'}`);
+        const output = path.resolve(stageDirectory, relativePath);
+        if (!output.startsWith(`${stageDirectory}${path.sep}`)) throw new Error('更新文件路径无效');
+        await fs.mkdir(path.dirname(output), { recursive: true });
+        await fs.writeFile(output, bytes);
+      }
+      await fs.writeFile(path.join(stageDirectory, 'package.json'), descriptorBytes);
+      await Promise.all(['app/index.html', 'editor/index.html', 'packager/index.html'].map((file) => fs.access(path.join(stageDirectory, file))));
+      await fs.mkdir(root, { recursive: true });
+      await fs.rm(targetDirectory, { recursive: true, force: true });
+      await fs.rename(stageDirectory, targetDirectory);
+      const state = { version: release.version, folder: `v${release.version}`, size: release.size, installedAt: new Date().toISOString() };
+      const temporary = `${updateStatePath()}.tmp`;
+      await fs.writeFile(temporary, JSON.stringify(state, null, 2), 'utf8');
+      await fs.rm(updateStatePath(), { force: true });
+      await fs.rename(temporary, updateStatePath());
+      activeDataPackage = { version: release.version, directory: targetDirectory, size: release.size };
+      return updateStatus('updated', { remoteVersion: release.version, release });
+    } catch (error) {
+      if (stageDirectory) await fs.rm(stageDirectory, { recursive: true, force: true }).catch(() => {});
+      return updateStatus('unavailable', { error: error.message || '无法下载更新' });
     } finally {
       dataUpdateJob = null;
     }
@@ -616,6 +647,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('nightwave:resolve-lyrics', async (_event, provider, result) => resolveDesktopLyrics(provider, result));
   ipcMain.handle('nightwave:get-data-update-state', async () => updateStatus('idle'));
   ipcMain.handle('nightwave:check-data-update', async () => checkDataUpdate());
+  ipcMain.handle('nightwave:install-data-update', async (_event, version) => installReleaseDataUpdate(String(version || '')));
 
   ipcMain.handle('nightwave:write-lyrics', async (_event, payload = {}) => {
     const directoryInput = String(payload.directoryPath || '').trim();

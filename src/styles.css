@@ -1816,6 +1816,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   box-shadow: 0 35px 100px rgba(0, 0, 0, 0.58);
 }
 
+.update-dialog { width: min(610px, calc(100vw - 44px)); max-height: min(720px, calc(100vh - 54px)); display: flex; flex-direction: column; overflow: hidden; color: var(--text); background: #151718; border: 1px solid rgba(255, 255, 255, .12); border-radius: 7px; box-shadow: 0 35px 100px rgba(0, 0, 0, .58); }.update-version-row { display: grid; grid-template-columns: 1fr 36px 1fr; align-items: center; gap: 10px; margin: 20px 22px 0; padding: 14px; background: #101213; border: 1px solid var(--line); border-radius: 5px; text-align: center; }.update-version-row div span, .update-version-row div strong { display: block; }.update-version-row div span { color: var(--muted); font-size: 9px; }.update-version-row div strong { margin-top: 6px; font: 12px Consolas, monospace; }.update-version-row svg { width: 17px; justify-self: center; color: var(--global-lyric-accent); }.update-size-row { display: flex; align-items: center; justify-content: space-between; margin: 10px 22px 0; color: var(--muted); font-size: 10px; }.update-size-row b { color: var(--accent-2); font: 10px Consolas, monospace; }.update-notes { min-height: 130px; max-height: 310px; margin: 18px 22px; padding-right: 8px; overflow: auto; }.update-notes section + section { margin-top: 18px; }.update-notes h3 { margin: 0 0 8px; color: var(--text); font-size: 12px; }.update-notes ul { margin: 0; padding-left: 18px; color: var(--soft); }.update-notes li { margin: 6px 0; font-size: 10px; line-height: 1.55; }
+
 .export-dialog { width: min(620px, calc(100vw - 44px)); padding-bottom: 20px; }
 
 .dialog-header {
@@ -2790,7 +2792,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   }
 
   .lyrics-search-dialog,
-  .export-dialog {
+  .export-dialog,
+  .update-dialog {
     width: 100%;
     max-height: calc(100dvh - 22px);
     border-right: 0;

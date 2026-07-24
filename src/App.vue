@@ -14,6 +14,7 @@ import LyricsSettingsPanel from './components/LyricsSettingsPanel.vue';
 import LyricsView from './components/LyricsView.vue';
 import TrackActionMenu from './components/TrackActionMenu.vue';
 import TrackList from './components/TrackList.vue';
+import UpdateDialog from './components/UpdateDialog.vue';
 import AppSettingsPage from './components/AppSettingsPage.vue';
 import ExtensionsPage from './components/ExtensionsPage.vue';
 import { collectDroppedFiles, createArtwork, filePath, fileStem, folderPath, formatTime, getExtension, isAudioFile, isImageFile, mediaKey, parseFileName, readId3, readLyrics } from './media';
@@ -83,6 +84,8 @@ const enabledExtensions = ref(new Set(Array.isArray(savedEnabledExtensions) ? sa
 const extensionsLoading = ref(false);
 const isElectron = Boolean(window.nightwaveDesktop);
 const dataUpdate = ref({ status: 'idle', currentVersion: '' });
+const releaseUpdate = ref(null);
+const updateDialogOpen = ref(false);
 const recentFolders = ref(loadJson('nightwave-recent-folders', []));
 const recentFoldersOpen = ref(false);
 const lyricsSavePreference = ref(loadJson('nightwave-lyrics-save-preference', 'ask'));
@@ -146,9 +149,9 @@ async function checkDataUpdate(silent = false) {
   try {
     const result = await window.nightwaveDesktop.checkDataUpdate();
     dataUpdate.value = result;
-    if (result.status === 'updated') {
-      notify(`已下载 v${result.remoteVersion}，正在刷新`);
-      window.setTimeout(() => window.location.reload(), 800);
+    if (result.status === 'available' && result.release) {
+      releaseUpdate.value = { ...result.release, currentVersion: result.currentVersion };
+      updateDialogOpen.value = true;
     } else if (!silent && result.status === 'up-to-date') {
       notify(`当前已是 v${result.currentVersion}`);
     } else if (!silent && result.status === 'unavailable') {
@@ -157,6 +160,20 @@ async function checkDataUpdate(silent = false) {
   } catch (error) {
     dataUpdate.value = { ...dataUpdate.value, status: 'unavailable', error: error.message || '暂时无法检查更新' };
     if (!silent) notify(dataUpdate.value.error);
+  }
+}
+async function installDataUpdate() {
+  if (!releaseUpdate.value || !window.nightwaveDesktop?.installDataUpdate) return;
+  dataUpdate.value = { ...dataUpdate.value, status: 'downloading' };
+  const result = await window.nightwaveDesktop.installDataUpdate(releaseUpdate.value.version);
+  dataUpdate.value = result;
+  if (result.status === 'updated') {
+    updateDialogOpen.value = false;
+    notify(`已更新到 v${result.remoteVersion}，正在刷新`);
+    window.setTimeout(() => window.location.reload(), 800);
+  } else {
+    releaseUpdate.value = { ...releaseUpdate.value, error: result.error || '更新下载失败' };
+    notify(releaseUpdate.value.error);
   }
 }
 function scheduleEqUpdate() {
@@ -738,6 +755,7 @@ function onKeyDown(event) { if (event.key === 'Escape') { actionMenu.value = nul
     <LyricsSearchDialog v-if="lyricsSearchTrack" :track="lyricsSearchTrack" @close="lyricsSearchId = null" @apply="applyOnlineLyrics" />
     <LyricsSettingsPanel v-if="lyricsSettingsOpen" :settings="lyricSettings" @update="lyricSettings = $event" @close="lyricsSettingsOpen = false" />
     <AudioExportDialog v-if="exportTrack" :track="exportTrack" @close="exportTrackId = null" @toast="notify" />
+    <UpdateDialog v-if="updateDialogOpen && releaseUpdate" :update="releaseUpdate" :downloading="dataUpdate.status === 'downloading'" @close="updateDialogOpen = false" @download="installDataUpdate" />
      <div v-if="isImporting" class="import-progress-dock"><div class="import-progress-ring" :style="{ '--progress-angle': `${importProgressPercent * 3.6}deg` }"><span>{{ importProgressPercent }}%</span></div><div><strong>正在读取音乐</strong><small>{{ importProgress.processed }} / {{ importProgress.total }} 个文件{{ importProgress.failed ? ` · ${importProgress.failed} 个失败` : '' }}</small></div></div><div v-if="dragging" class="drop-overlay"><Sparkles /><strong>松开以载入音乐</strong></div><div v-if="toast" class="toast" role="status">{{ toast }}</div><LyricsSaveDialog v-if="lyricsSavePrompt" :track="lyricsSavePrompt.track" @save="handleLyricsSaveDecision({ save: true, remember: $event.remember })" @cancel="handleLyricsSaveDecision({ save: false, remember: $event.remember })" />
   </div>
 </template>

@@ -3,6 +3,7 @@ dist/
 EDITOR/dist/
 PACKAGER/dist/
 release*/
+release-assets/
 *.log
 .vscode/
 1908

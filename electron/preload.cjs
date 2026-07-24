@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('nightwaveDesktop', {
   resolveLyrics: (provider, result) => ipcRenderer.invoke('nightwave:resolve-lyrics', provider, result),
   getDataUpdateState: () => ipcRenderer.invoke('nightwave:get-data-update-state'),
   checkDataUpdate: () => ipcRenderer.invoke('nightwave:check-data-update'),
+  installDataUpdate: (version) => ipcRenderer.invoke('nightwave:install-data-update', version),
   writeLyrics: (payload) => ipcRenderer.invoke('nightwave:write-lyrics', payload),
   loadUserState: () => ipcRenderer.invoke('nightwave:load-user-state'),
   saveUserState: (state) => ipcRenderer.invoke('nightwave:save-user-state', state),
